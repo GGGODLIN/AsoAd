@@ -1,5 +1,3 @@
-
-
 import React, { useContext, useCallback, useState } from 'react';
 import { Context } from '../../Store/store'
 import { BasicContainer, SubContainer, Container } from '../../Components/Containers';
@@ -31,30 +29,110 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { PageSubTitle, PageSubTitleMobile } from '../../Components/PageSubTitle';
+import { makeStyles } from '@material-ui/core/styles';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const overTheme = createMuiTheme({
     overrides: {
         // Style sheet name ⚛️
         MuiRadio: {
             // Name of the rule
-            root: {
-                // Some CSS
-                background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-                borderRadius: 3,
-                border: 0,
-                color: 'white',
-                height: 48,
-                padding: '0 30px',
-                boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+            colorSecondary: {
+                '&$checked': {
+                    color: '#964f19',
+                },
+                color: '#964f19',
+
             },
         },
     },
+
 });
+const overThemeLessThan768 = createMuiTheme({
+    overrides: {
+        // Style sheet name ⚛️
+        MuiRadio: {
+            // Name of the rule
+            colorSecondary: {
+                '&$checked': {
+                    color: '#964f19',
+                },
+                color: '#964f19',
+
+            },
+        },
+        MuiFormControlLabel: {
+            root: {
+                width: '20%',
+                'margin-right': '0',
+                //'margin-left': '0',
+                'min-width': '80px',
+            },
+        },
+        MuiFormControl: {
+            root: {
+                display: 'block'
+            }
+        },
+
+    },
+
+});
+const overTheme2 = createMuiTheme({
+    overrides: {
+        // Style sheet name ⚛️
+        MuiPaper: {
+            // Name of the rule
+            elevation1: {
+                'box-shadow': '0',
+
+            },
+        },
+        MuiAccordionSummary: {
+            root: {
+                padding: '0',
+                margin: '0',
+                minHeight: '0',
+                'justify-content': 'flex-start',
+            },
+            content: {
+                margin: '0',
+                'flex-grow': '0',
+            }
+        },
+        MuiIconButton: {
+            root: {
+                padding: '0'
+            }
+        },
+        MuiAccordionDetails: {
+            root: {
+                padding: '0',
+            }
+        }
+    },
+
+});
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+    },
+    heading: {
+        fontSize: theme.typography.pxToRem(15),
+        fontWeight: theme.typography.fontWeightRegular,
+    },
+}));
 
 export const Test = (props) => {
+    const classes = useStyles();
 
     const { APIUrl, Theme } = useContext(Context);
-    const { pages: { customersPage: { customers } } } = Theme;
+    const { pages: { testPage: { test } } } = Theme;
     let history = useHistory();
     const [TableData, setTableData] = useState([]);
     const [OpenDelJumpDialog, setOpenDelJumpDialog] = useState(false); // 開啟刪除彈窗
@@ -346,20 +424,31 @@ export const Test = (props) => {
     return (
         <>
             {/* 寬度大於等於768時渲染的組件 */}
-            {width > 768 && <BasicContainer theme={customers.basicContainer}>
-                <CustomersPageTitleAddSearch setOpenAddJumpDialog={setOpenAddJumpDialog} execute={execute} setSearchWord={setSearchWord} />
-                <BasicContainer theme={customers.tableBasicContainer}>
-                    <FormControl component="fieldset">
-                        {/* <FormLabel component="legend">Gender</FormLabel> */}
-                        <RadioGroup aria-label="gender" name="gender1" value={Region} onChange={handleChange} row>
-                            <FormControlLabel value="北部" control={<Radio />} label="北部" />
-                            <FormControlLabel value="中部" control={<Radio />} label="中部" />
-                            <FormControlLabel value="南部" control={<Radio />} label="南部" />
-                            <FormControlLabel value="東部" control={<Radio />} label="東部" />
-                            <FormControlLabel value="離島" control={<Radio />} label="離島" />
-                        </RadioGroup>
-                    </FormControl>
-                    <Container theme={{ justify: 'space-between' }}>
+            {width > 768 && <BasicContainer theme={test.basicContainer}>
+                <PageSubTitle title='服務據點' text={{ userSelect: "none", color: "#444", fontSize: "1.75em", fontWeight: 'normal', padding: " 0.2rem 0 12px 0", }}
+                    container={{
+                        direction: "row",
+                        justify: "space-between",
+                        padding: "0 40px 0 40px ",
+                        width: '100%',
+                        margin: '40px 0 0 0',
+                        //height: '3rem',
+                    }} />
+                <BasicContainer theme={test.tableBasicContainer}>
+
+                    <ThemeProvider theme={overTheme}>
+                        <FormControl component="fieldset">
+                            {/* <FormLabel component="legend">Gender</FormLabel> */}
+                            <RadioGroup aria-label="gender" name="gender1" value={Region} onChange={handleChange} row>
+                                <FormControlLabel value="北部" control={<Radio />} label="北部" />
+                                <FormControlLabel value="中部" control={<Radio />} label="中部" />
+                                <FormControlLabel value="南部" control={<Radio />} label="南部" />
+                                <FormControlLabel value="東部" control={<Radio />} label="東部" />
+                                <FormControlLabel value="離島" control={<Radio />} label="離島" />
+                            </RadioGroup>
+                        </FormControl>
+                    </ThemeProvider>
+                    <Container >
                         <CardTable3in1
                             data={{
                                 ...TableData, data: TableData?.data?.filter((item) => {
@@ -395,29 +484,39 @@ export const Test = (props) => {
                                                 color: "#444",
                                                 fontSize: "1.125rem",
                                                 fontWeight: "900",
-                                                width: '50%',
+                                                width: '70%',
                                                 display: 'inline-block'
                                             }}>{item}</Text>
                                             <Text theme={{
                                                 color: "#444",
                                                 fontSize: "1.125rem",
                                                 fontWeight: "900",
-                                                width: '50%',
+                                                width: '30%',
                                                 display: 'inline-block',
                                                 textAlign: 'right'
                                             }}>{rowItem?.County}</Text>
-                                            <Text theme={{
-                                                color: "#444",
-                                                fontSize: "1.125rem",
-                                                fontWeight: "900",
-                                                display: 'block'
-                                            }}>{`${rowItem?.County}${rowItem?.District}${rowItem?.Addr}`}</Text>
+                                            <Text
+                                                style={{
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                    WebkitLineClamp: 1,
+                                                    width: "100%",
+                                                    WebkitBoxOrient: "vertical",
+                                                    whiteSpace: 'nowarp'
+                                                }}
+                                                theme={{
+                                                    color: "#444",
+                                                    fontSize: "1.125rem",
+                                                    fontWeight: "400",
+                                                    display: '-webkit-inline-box'
+                                                }}>{`${rowItem?.County}${rowItem?.District}${rowItem?.Addr}`}</Text>
                                             <Text theme={{
                                                 color: "#964f19",
                                                 fontSize: "1.125rem",
                                                 fontWeight: "500",
-                                                display: 'block'
-                                            }}>{rowItem?.ShopTel}</Text>
+                                                display: 'block',
+                                                height: '21px',
+                                            }}>{!!rowItem?.ShopTel ? rowItem?.ShopTel : '  '}</Text>
                                             <EasyButton
                                                 onClick={() => { console.log("立即預約") }}
                                                 theme={{
@@ -554,137 +653,264 @@ export const Test = (props) => {
             </BasicContainer>
             }
             {/* 寬度小於768時渲染的組件 */}
-            {width <= 768 && <BasicContainer theme={customers.basicContainer}
-                onScroll={(e) => {
-                    // 滾動至最底部加載新資料
-                    if (e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight) {
-                        if (!PendingScrollBottom) {
-                            //非API執行中
-                            executeScrollBottom(ScrollPage)
-                            //console.log("Bottom")
-                        }
-                    }
-                }}
-            >
-                <CustomersPageTitleAddSearch tableBasicContainerLessThan768 setOpenAddJumpDialog={setOpenAddJumpDialog} execute={execute} setSearchWord={setSearchWord} />
+            {width <= 768 && <BasicContainer theme={test.basicContainer}>
 
-                <BasicContainer theme={customers.tableBasicContainerLessThan768}>
-                    <Container theme={{ justify: 'space-between' }}>
-                        <CardTable3in1 data={TableData}
-                            title={["顧客姓名", "連絡電話", "通訊地址", "生日", 'Email', '註冊日期', '']} //必傳 title 與 colKeys 順序必需互相對應，否則名字跟資料欄會對錯
-                            colKeys={["cRealName", "cTel", "CommCounty", "cBirthDay", 'cEmail', 'CreateTime', 'controll']} //必傳
+
+                <BasicContainer theme={test.tableBasicContainer}>
+
+                    <ThemeProvider theme={overThemeLessThan768}>
+                        <FormControl component="fieldset">
+                            {/* <FormLabel component="legend">Gender</FormLabel> */}
+                            <RadioGroup aria-label="gender" name="gender1" value={Region} onChange={handleChange} row>
+                                <FormControlLabel value="北部" control={<Radio />} label="北部" />
+                                <FormControlLabel value="中部" control={<Radio />} label="中部" />
+                                <FormControlLabel value="南部" control={<Radio />} label="南部" />
+                                <FormControlLabel value="東部" control={<Radio />} label="東部" />
+                                <FormControlLabel value="離島" control={<Radio />} label="離島" />
+                            </RadioGroup>
+                        </FormControl>
+                    </ThemeProvider>
+                    <Container >
+                        <CardTable
+                            data={{
+                                ...TableData, data: TableData?.data?.filter((item) => {
+                                    if (Region === '北部')
+                                        return item?.County === '臺北市' || item?.County === '新北市' || item?.County === '基隆市' || item?.County === '宜蘭縣' || item?.County === '桃園市' || item?.County === '新竹縣' || item?.County === '新竹市';
+                                    else if (Region === '中部')
+                                        return item?.County === '臺中市' || item?.County === '苗栗縣' || item?.County === '彰化縣' || item?.County === '南投縣' || item?.County === '雲林縣';
+                                    else if (Region === '南部')
+                                        return item?.County === '高雄市' || item?.County === '臺南市' || item?.County === '嘉義市' || item?.County === '嘉義縣' || item?.County === '屏東縣';
+                                    else if (Region === '東部')
+                                        return item?.County === '花蓮縣' || item?.County === '臺東縣';
+                                    else if (Region === '離島')
+                                        return item?.County === '澎湖縣' || item?.County === '金門縣' || item?.County === '連江縣';
+
+                                })
+                            }}
+                            title={["顧客姓名", "門市營業時間",]} //必傳 title 與 colKeys 順序必需互相對應，否則名字跟資料欄會對錯
+                            colKeys={["ShopName", "ShopDate",]} //必傳
                             // turnPageExecute={(executePages) => { execute(executePages, SearchWord) }}//暫不提供，因為沒用到 發查翻頁，必傳否則不能翻頁
                             theme={{
                                 // basicContainer:{}, // 卡片最外層容器
                                 // rowContainer: {}, // 卡片內每個資料列容器樣式，可在下方針對個別欄位複寫樣式
                                 // rowTitle: {}, // 卡片內每個資料列中標題 不以renderTitle複寫時樣式
                                 // rowContent: {}, // 卡片內每個資料列中標題 不以renderContent複寫時樣式
-                                "cRealName": {
+                                "ShopName": {
                                     // 提供客製化渲染內容，可使用預設參數 item 與 id，item 為 對應列表資料、id 為對應列表資料的id
                                     // renderTitle: (item, id) => (`${item} ${id} sdf`)
                                     width: "20%",
-                                    renderTitle: (item, id) => ((item &&
-                                        <Text theme={{
-                                            display: "block",
-                                            margin: "0 0 0.375rem 0",
-                                            color: "#999",
-                                            fontSize: "0.75rem",
-                                            fontWeight: "500",
-                                            height: "0.875rem"
-                                        }}>{item}</Text>)),
-                                    renderContent: (item, id) => ((item &&
-                                        <Text theme={{
-                                            color: "#444",
-                                            fontSize: "1.125rem",
-                                            fontWeight: "900"
-                                        }}>{item}</Text>))
-                                },
-                                "cTel": {
-                                    renderTitle: (item, id) => ((item &&
-                                        <Text theme={{
-                                            display: "block",
-                                            margin: "0 0 0.375rem 0",
-                                            color: "#999",
-                                            fontSize: "0.75rem",
-                                            fontWeight: "500"
-                                        }}>{item}</Text>)),
-                                    renderContent: (item, id) => ((item &&
-                                        <Text theme={{
-                                            color: "#964f19",
-                                            fontSize: "1rem",
-                                            fontWeight: "550"
-                                        }}>{item}</Text>))
-                                },
-                                "CommCounty": {
-                                    renderTitle: (item, id) => ((item &&
-                                        <Text theme={{
-                                            display: "block",
-                                            margin: "0 0 0.375rem 0",
-                                            color: "#999",
-                                            fontSize: "0.75rem",
-                                            fontWeight: "500"
-                                        }}>{item}</Text>)),
+                                    renderTitle: (item, id) => ((item && null)),
                                     renderContent: (item, id, rowItem) => ((item &&
-                                        <Text theme={{
-                                            color: "#444",
-                                            fontSize: "1rem",
-                                            fontWeight: "500"
-                                        }}>{`${item ?? ''}${rowItem?.CommDistrict ?? ''}${rowItem?.CommAddr ?? ''}`}</Text>))
+                                        <>
+                                            <Text theme={{
+                                                color: "#444",
+                                                fontSize: "1.125rem",
+                                                fontWeight: "900",
+                                                width: '50%',
+                                                display: 'inline-block'
+                                            }}>{item}</Text>
+                                            <Text theme={{
+                                                color: "#444",
+                                                fontSize: "1.125rem",
+                                                fontWeight: "900",
+                                                width: '50%',
+                                                display: 'inline-block',
+                                                textAlign: 'right'
+                                            }}>{rowItem?.County}</Text>
+                                            <Text theme={{
+                                                color: "#444",
+                                                fontSize: "1.125rem",
+                                                fontWeight: "900",
+                                                display: 'block'
+                                            }}>{`${rowItem?.County}${rowItem?.District}${rowItem?.Addr}`}</Text>
+                                            <Text theme={{
+                                                color: "#964f19",
+                                                fontSize: "1.125rem",
+                                                fontWeight: "500",
+                                                display: 'block',
+                                                height: '21px',
+                                            }}>{!!rowItem?.ShopTel ? rowItem?.ShopTel : '  '}</Text>
+                                            <EasyButton
+                                                onClick={() => { console.log("立即預約") }}
+                                                theme={{
+                                                    backgroundColor: "#964f19",
+                                                    display: "inline-block",
+                                                    width: "100%",
+                                                    height: "2.25rem",
+                                                    lineHeight: "2.25rem",
+                                                    color: "white",
+                                                    //border: "1px solid #964f19",
+                                                    borderRadius: "4px",
+                                                    textAlign: "center",
+                                                    hoverBackgroundColor: "#6d3f00",
+                                                    hoverColor: "#fff",
+                                                    fontSize: "0.875rem",
+                                                    cursor: "pointer",
+                                                }}
+                                                text={"立即預約"}
+                                            />
+                                        </>
+                                    ))
                                 },
-                                "cBirthDay": {
-                                    width: "40%",
-                                    rowContainer: {
-                                        position: "absolute",
-                                        top: "4.25rem",
-                                        left: "50%"
-                                    },
-                                    renderTitle: (item, id) => ((item &&
-                                        <Text theme={{
+                                "ShopDate": {
+                                    renderTitle: (item, id, rowItem) => ((item &&
+                                        <>
+                                            {/* <Text theme={{
                                             display: "block",
                                             margin: "0 0 0.375rem 0",
                                             color: "#999",
                                             fontSize: "0.75rem",
                                             fontWeight: "500"
-                                        }}>{item}</Text>)),
-                                    renderContent: (item, id) => ((item &&
-                                        <Text theme={{
-                                            color: "#444",
-                                            fontSize: "1rem",
-                                            fontWeight: "500"
-                                        }}>{item.split("T")[0]}</Text>))
+                                        }}>{item}</Text> */}
+                                            <ThemeProvider theme={overTheme2}>
+                                                < Accordion >
+                                                    <AccordionSummary
+                                                        expandIcon={<ExpandMoreIcon />}
+                                                        aria-controls="panel1a-content"
+                                                        id="panel1a-header"
+                                                    >
+                                                        <Typography className={classes.heading}>{item}</Typography>
+                                                    </AccordionSummary>
+                                                    <AccordionDetails>
+                                                        <Container>
+                                                            <SubContainer theme={{ occupy: 6 }}>
+                                                                <Text theme={{
+                                                                    color: "#444",
+                                                                    fontSize: "1rem",
+                                                                    fontWeight: "400"
+                                                                }}>{`週一 ${rowItem?.ShopDate?.split(',')[0]}`}</Text>
+                                                            </SubContainer>
+                                                            <SubContainer theme={{ occupy: 6 }}>
+                                                                <Text theme={{
+                                                                    color: "#444",
+                                                                    fontSize: "1rem",
+                                                                    fontWeight: "400"
+                                                                }}>{`週六 ${rowItem?.ShopDate?.split(',')[5]}`}</Text>
+                                                            </SubContainer>
+                                                            <SubContainer theme={{ occupy: 6 }}>
+                                                                <Text theme={{
+                                                                    color: "#444",
+                                                                    fontSize: "1rem",
+                                                                    fontWeight: "400"
+                                                                }}>{`週二 ${rowItem?.ShopDate?.split(',')[1]}`}</Text>
+                                                            </SubContainer>
+                                                            <SubContainer theme={{ occupy: 6 }}>
+                                                                <Text theme={{
+                                                                    color: "#444",
+                                                                    fontSize: "1rem",
+                                                                    fontWeight: "400"
+                                                                }}>{`週日 ${rowItem?.ShopDate?.split(',')[6]}`}</Text>
+                                                            </SubContainer>
+                                                            <SubContainer theme={{ occupy: 6 }}>
+                                                                <Text theme={{
+                                                                    color: "#444",
+                                                                    fontSize: "1rem",
+                                                                    fontWeight: "400"
+                                                                }}>{`週三 ${rowItem?.ShopDate?.split(',')[2]}`}</Text>
+                                                            </SubContainer>
+                                                            <SubContainer theme={{ occupy: 6 }}>
+                                                                <Text theme={{
+                                                                    color: "#444",
+                                                                    fontSize: "1rem",
+                                                                    fontWeight: "400"
+                                                                }}>{' '}</Text>
+                                                            </SubContainer>
+                                                            <SubContainer theme={{ occupy: 6 }}>
+                                                                <Text theme={{
+                                                                    color: "#444",
+                                                                    fontSize: "1rem",
+                                                                    fontWeight: "400"
+                                                                }}>{`週四 ${rowItem?.ShopDate?.split(',')[3]}`}</Text>
+                                                            </SubContainer>
+                                                            <SubContainer theme={{ occupy: 6 }}>
+                                                                <Text theme={{
+                                                                    color: "#444",
+                                                                    fontSize: "1rem",
+                                                                    fontWeight: "400"
+                                                                }}>{' '}</Text>
+                                                            </SubContainer>
+                                                            <SubContainer theme={{ occupy: 6 }}>
+                                                                <Text theme={{
+                                                                    color: "#444",
+                                                                    fontSize: "1rem",
+                                                                    fontWeight: "400"
+                                                                }}>{`週五 ${rowItem?.ShopDate?.split(',')[4]}`}</Text>
+                                                            </SubContainer>
+                                                        </Container>
+                                                    </AccordionDetails>
+                                                </Accordion>
+                                            </ThemeProvider>
+                                        </>
+                                    )),
+                                    renderContent: (item, id, rowItem) => ((false &&
+                                        <Container>
+                                            <SubContainer theme={{ occupy: 6 }}>
+                                                <Text theme={{
+                                                    color: "#444",
+                                                    fontSize: "1rem",
+                                                    fontWeight: "400"
+                                                }}>{`週一 ${rowItem?.ShopDate?.split(',')[0]}`}</Text>
+                                            </SubContainer>
+                                            <SubContainer theme={{ occupy: 6 }}>
+                                                <Text theme={{
+                                                    color: "#444",
+                                                    fontSize: "1rem",
+                                                    fontWeight: "400"
+                                                }}>{`週六 ${rowItem?.ShopDate?.split(',')[5]}`}</Text>
+                                            </SubContainer>
+                                            <SubContainer theme={{ occupy: 6 }}>
+                                                <Text theme={{
+                                                    color: "#444",
+                                                    fontSize: "1rem",
+                                                    fontWeight: "400"
+                                                }}>{`週二 ${rowItem?.ShopDate?.split(',')[1]}`}</Text>
+                                            </SubContainer>
+                                            <SubContainer theme={{ occupy: 6 }}>
+                                                <Text theme={{
+                                                    color: "#444",
+                                                    fontSize: "1rem",
+                                                    fontWeight: "400"
+                                                }}>{`週日 ${rowItem?.ShopDate?.split(',')[6]}`}</Text>
+                                            </SubContainer>
+                                            <SubContainer theme={{ occupy: 6 }}>
+                                                <Text theme={{
+                                                    color: "#444",
+                                                    fontSize: "1rem",
+                                                    fontWeight: "400"
+                                                }}>{`週三 ${rowItem?.ShopDate?.split(',')[2]}`}</Text>
+                                            </SubContainer>
+                                            <SubContainer theme={{ occupy: 6 }}>
+                                                <Text theme={{
+                                                    color: "#444",
+                                                    fontSize: "1rem",
+                                                    fontWeight: "400"
+                                                }}>{' '}</Text>
+                                            </SubContainer>
+                                            <SubContainer theme={{ occupy: 6 }}>
+                                                <Text theme={{
+                                                    color: "#444",
+                                                    fontSize: "1rem",
+                                                    fontWeight: "400"
+                                                }}>{`週四 ${rowItem?.ShopDate?.split(',')[3]}`}</Text>
+                                            </SubContainer>
+                                            <SubContainer theme={{ occupy: 6 }}>
+                                                <Text theme={{
+                                                    color: "#444",
+                                                    fontSize: "1rem",
+                                                    fontWeight: "400"
+                                                }}>{' '}</Text>
+                                            </SubContainer>
+                                            <SubContainer theme={{ occupy: 6 }}>
+                                                <Text theme={{
+                                                    color: "#444",
+                                                    fontSize: "1rem",
+                                                    fontWeight: "400"
+                                                }}>{`週五 ${rowItem?.ShopDate?.split(',')[4]}`}</Text>
+                                            </SubContainer>
+                                        </Container>
+                                    ))
                                 },
-                                "cEmail": {
-                                    renderTitle: (item, id) => ((item &&
-                                        <Text theme={{
-                                            display: "block",
-                                            margin: "0 0 0.375rem 0",
-                                            color: "#999",
-                                            fontSize: "0.75rem",
-                                            fontWeight: "500"
-                                        }}>{item}</Text>)),
-                                    renderContent: (item, id) => ((item &&
-                                        <Text theme={{
-                                            color: "#444",
-                                            fontSize: "1rem",
-                                            fontWeight: "500"
-                                        }}>{item}</Text>))
-                                },
-                                "CreateTime": {
-                                    renderTitle: (item, id) => ((item &&
-                                        <Text theme={{
-                                            display: "block",
-                                            margin: "0 0 0.375rem 0",
-                                            color: "#999",
-                                            fontSize: "0.75rem",
-                                            fontWeight: "500"
-                                        }}>{item}</Text>)),
-                                    renderContent: (item, id) => ((item &&
-                                        <Text theme={{
-                                            color: "#444",
-                                            fontSize: "1rem",
-                                            fontWeight: "500"
-                                        }}>{item.split("T")[0]}</Text>))
-                                },
+
                                 "controll": {
                                     width: "40%",
                                     rowContainer: {
@@ -720,49 +946,8 @@ export const Test = (props) => {
                 </BasicContainer>
             </BasicContainer>
             }
-            {/* 刪除彈窗 */}
-            {OpenDelJumpDialog &&
-                <JumpDialog
-                    switch={[OpenDelJumpDialog, setOpenDelJumpDialog]}
-                    close={() => { setDelWho("") }}
-                    yes={() => {
-                        setDelWho("");
-                        DelAdminUserExecute(Id);
-                    }}
-                    yesText={"是，移除顧客"}
-                    no={() => {
-                        setDelWho("");
-                        alertService.clear();
-                    }}
-                    noText={"否，取消移除"}
-                >
-                    <BasicContainer theme={{ width: "100%", height: "9.375rem", textAlign: "center" }}>
-                        <ErrorOutlineIcon style={{
-                            position: "relative",
-                            top: "-1.5rem",
-                            height: "9.375rem",
-                            width: "6.5rem",
-                            color: "#facea8"
-                        }} />
-                    </BasicContainer>
-                    <Text theme={{
-                        display: "inline-block",
-                        color: "#545454",
-                        fontSize: "1.125em",
-                        fontWeight: 600
-                    }}>
-                        您確定要將 <Text theme={{
-                            color: "#545454",
-                            fontSize: "1.15em",
-                            fontWeight: 600
-                        }}>{DelWho}</Text> 的帳號從顧客名單中移除嗎？
-                        </Text>
-                </JumpDialog>
-            }
-            {/* 新增表單卡片 */}
-            {OpenAddJumpDialog && <CustomersAddCard execute={(page, key) => { execute(page, key) }} addAdminUserExecute={AddUserExecute} onClose={setOpenAddJumpDialog} />}
-            {/* 編輯表單卡片 */}
-            {OpenEditJumpDialog && <CustomersEditCard execute={(page, key) => { execute(page, key) }} editAdminUserExecute={EditUserExecute} onClose={(isOpen) => { setOpenEditJumpDialog(isOpen) }} editAutoFill={EditAutoFill} />}
+
+
         </>
     )
 }

@@ -80,7 +80,7 @@ const CardTableBase1row3card = (props) => {
         <>
             {(Data ?? []).map((item, index) => (
                 <React.Fragment key={`${index}`}>
-                    <SubContainer theme={props?.theme?.basicContainer ?? { ...cardTable.basicContainer, display: 'inline-block', width: '32%' }}>
+                    <SubContainer theme={props?.theme?.basicContainer ?? { ...cardTable.basicContainer, display: 'inline-block', width: '31%' }}>
                         {(props.colKeys ?? []).map((subItem, subIndex) => (
                             <BasicContainer
                                 key={`${subItem}${subIndex}`}

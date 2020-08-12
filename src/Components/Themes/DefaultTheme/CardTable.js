@@ -3,7 +3,7 @@ export default {
         //#region 卡片最外層容器
         basicContainer: {
             padding: "0.875rem 1rem",
-            margin: "0 0 0.875rem 0",
+            margin: "0 2% 0.875rem 0",
             boxShadow: "0 2px 4px #0000001a",
             borderRadius: "8px",
             backgroundColor: "#fff",
